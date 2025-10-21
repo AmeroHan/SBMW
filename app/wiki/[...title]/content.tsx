@@ -14,7 +14,12 @@ export async function Content({ title }: { title: string }) {
 					<div>版本ID：{revision.id}</div>
 					<div>{time.toLocaleString()}</div>
 				</div>
-				<MonacoEditor defaultValue={revision.content} language="wikitext" className="h-[80vh]" />
+				<MonacoEditor
+					withMinimap
+					defaultValue={revision.content}
+					language="wikitext"
+					className="h-[80vh] border rounded-md"
+				/>
 			</>
 		)
 	} catch (e) {

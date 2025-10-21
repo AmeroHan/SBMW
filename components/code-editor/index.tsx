@@ -11,7 +11,10 @@ const CodeEditorCore = dynamic(() => import('./core').then((m) => m.CodeEditorCo
 export function MonacoEditor({ className, ...props }: CodeEditorProps) {
 	return (
 		<div
-			className={cn('relative flex items-center justify-center rounded-md [&_div:not(:empty)~svg]:hidden', className)}
+			className={cn(
+				'relative flex items-center justify-center rounded-md overflow-hidden [&>div:not(:empty)~[aria-label=Loading]]:hidden',
+				className
+			)}
 		>
 			<CodeEditorCore {...props} />
 			<Spinner />

@@ -14,14 +14,17 @@ async function prepare({ themes, languages }: { themes: string[]; languages: str
 	}
 	shikiToMonaco(highlighter, monaco)
 }
-await prepare({ themes: ['github-dark-dimmed', 'github-light'], languages: ['wikitext', 'css', 'javascript', 'json'] })
+await prepare({
+	themes: ['github-dark-dimmed', 'github-light'],
+	languages: ['wikitext', 'css', 'javascript', 'json', 'regexp'],
+})
 
 export type MonacoEditorInstance = monaco.editor.IStandaloneCodeEditor
 
 export type CodeEditorProps = {
 	language: string
 	defaultValue?: string
-	onChange?: (value: string, e: monaco.editor.IModelContentChangedEvent) => unknown
+	onChange?: (value: string, event: monaco.editor.IModelContentChangedEvent) => unknown
 	readOnly?: boolean
 	wordWrap?: boolean
 	withMinimap?: boolean
@@ -37,15 +40,25 @@ export function CodeEditorCore({
 	readOnly,
 	wordWrap,
 	withMinimap = false,
-	editorRef,
+	editorRef: outerEditorRef,
 }: CodeEditorProps) {
 	// const theme = resolvedTheme === 'dark' ? DARK_THEME_NAME : LIGHT_THEME_NAME
+	const theme = 'github-light'
 	const containerRef = useRef<HTMLDivElement>(null)
+	const editorRef = useRef<MonacoEditorInstance>(null)
 
-	// useEffect(() => {
-	//   if (!containerRef.current) return
-	//   monaco.editor.setTheme(theme)
-	// }, [theme])
+	useEffect(() => {
+		if (!containerRef.current) return
+		monaco.editor.setTheme(theme)
+	}, [theme])
+
+	useEffect(() => {
+		if (!editorRef.current) return
+		editorRef.current.updateOptions({
+			minimap: { enabled: withMinimap },
+		})
+		console.log('withMinimap: ', withMinimap)
+	}, [withMinimap])
 
 	useEffect(() => {
 		const container = containerRef.current
@@ -53,26 +66,22 @@ export function CodeEditorCore({
 
 		const editor = monaco.editor.create(container, {
 			value: defaultValue,
-			theme: 'github-light',
+			theme,
 			language,
 			readOnly,
 			minimap: { enabled: withMinimap },
-			lineNumbersMinChars: 3,
-			showFoldingControls: 'never',
-			scrollbar: {
-				verticalScrollbarSize: 6,
-				horizontalSliderSize: 6,
-			},
 			automaticLayout: true,
 			wordWrap: wordWrap ? 'on' : undefined,
 			fontFamily: 'var(--font-mono)',
 			unicodeHighlight: {
-				allowedLocales: { 'zh-hans': true },
+				allowedLocales: { 'zh-hans': true, ja: true },
 			},
+			fontLigatures: true,
 		})
 
-		if (editorRef) {
-			editorRef.current = editor
+		editorRef.current = editor
+		if (outerEditorRef) {
+			outerEditorRef.current = editor
 		}
 
 		// 网络字体可能未完全加载，导致文字尺寸计算错误，重新测量
@@ -86,6 +95,10 @@ export function CodeEditorCore({
 		}
 
 		return () => {
+			editorRef.current = null
+			if (outerEditorRef) {
+				outerEditorRef.current = null
+			}
 			editor.dispose()
 		}
 		// theme 没进依赖是有意为之
