@@ -11,8 +11,9 @@ export function SiteHeader() {
 function SiteNav() {
 	return (
 		<nav>
-			<ul>
+			<ul className="flex items-center gap-8">
 				<NavItem href="/search">搜索</NavItem>
+				<NavItem href="/queue">队列</NavItem>
 			</ul>
 		</nav>
 	)
