@@ -1,3 +1,4 @@
+import 'server-only'
 import { Config, ConfigSchema } from './config'
 import { WikiApi } from './api'
 import { Page } from './page'

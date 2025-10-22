@@ -23,8 +23,6 @@ export class Page {
 	id: number | undefined = undefined
 	title: string | undefined = undefined
 
-	private existing: boolean | null = null
-
 	constructor(options: { wiki: Wiki } & PageInit) {
 		this.wiki = options.wiki
 		if ('id' in options) {
