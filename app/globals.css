@@ -79,7 +79,7 @@
 	--sidebar-border: oklch(0.92 0.004 286.32);
 	--sidebar-ring: oklch(0.705 0.015 286.067);
 	--link: oklch(0.48 0.24 265.06);
-	--link-visited: oklch(0.58 0.2 -47);
+	--link-visited: oklch(0.54 0.17 -47);
 }
 
 .dark {
@@ -115,7 +115,7 @@
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.552 0.016 285.938);
 	--link: oklch(0.6 0.24 265.06);
-	--link-visited: oklch(0.58 0.2 -47);
+	--link-visited: oklch(0.6 0.17 -47);
 }
 
 @layer base {

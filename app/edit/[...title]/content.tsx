@@ -1,7 +1,7 @@
 import { wiki } from '@/app/_server-context'
-import { MonacoEditor } from '@/components/code-editor'
 import { PageMissingError } from '@/lib/wiki/page'
 import type { ReactNode } from 'react'
+import { ContentEditor } from './content-editor'
 
 export async function Content({ title }: { title: string }) {
 	let content: ReactNode
@@ -9,22 +9,22 @@ export async function Content({ title }: { title: string }) {
 		const revision = await wiki.page({ title }).getLatestRevision()
 		const time = new Date(revision.timestamp)
 		content = (
-			<>
+			<div>
 				<div className="flex justify-between mb-4 text-muted-foreground">
 					<div>版本ID：{revision.id}</div>
 					<div>{time.toLocaleString()}</div>
 				</div>
-				<MonacoEditor
-					withMinimap
-					defaultValue={revision.content}
-					language="wikitext"
-					className="h-[80vh] border rounded-md"
-				/>
-			</>
+				<ContentEditor title={title} defaultValue={revision.content + '\n'} />
+			</div>
 		)
 	} catch (e) {
 		if (e instanceof PageMissingError) {
-			content = <div>页面不存在</div>
+			content = (
+				<div>
+					<p className="text-destructive">页面不存在，将创建页面。</p>
+					<ContentEditor title={title} />
+				</div>
+			)
 		} else {
 			throw e
 		}
