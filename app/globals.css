@@ -127,7 +127,12 @@
 
 		text-autospace: normal;
 	}
-	* {
-		text-box-trim: trim-both;
+
+	pre,
+	code,
+	textarea,
+	[class*='font-mono'] {
+		text-autospace: no-autospace;
+		text-spacing-trim: space-all;
 	}
 }

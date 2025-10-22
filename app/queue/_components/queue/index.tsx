@@ -14,7 +14,7 @@ export function Queue() {
 	const [queue, setQueue] = useAtom(queueAtom)
 	const action = useAtomValue(actionHistoryAtom)
 	return (
-		<div className="space-y-2">
+		<div className="space-y-4">
 			<H2>队列</H2>
 			<ul className="flex flex-wrap gap-2">
 				{queue.map((page, i) => {

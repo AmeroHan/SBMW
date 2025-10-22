@@ -12,6 +12,7 @@ import { useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { queueAtom } from '../queue/atoms'
 import { toast } from 'sonner'
+import { pageUrl } from '@/lib/utils'
 
 export function SearchResultList() {
 	const searchResult = useAtomValue(searchResultAtom)
@@ -80,7 +81,7 @@ function SearchResultItem({
 			<h3 className="flex items-center gap-4">
 				<div>
 					<Checkbox checked={selected} onCheckedChange={onSelectedChange} className="mr-2" />
-					<ExternalTextLink href={`https://voca.wiki/${encodeURI(title)}`} className="font-bold text-lg">
+					<ExternalTextLink href={pageUrl(title)} className="font-bold text-lg">
 						{title}
 					</ExternalTextLink>
 				</div>

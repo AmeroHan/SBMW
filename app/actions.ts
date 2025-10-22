@@ -6,6 +6,7 @@ export async function editPage({ title, content, summary }: { title: string; con
 	await wiki.page({ title }).edit({
 		content,
 		summary,
+		tags: 'Automation tool',
 	})
 }
 

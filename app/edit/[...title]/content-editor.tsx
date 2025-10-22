@@ -35,6 +35,7 @@ export function ContentEditor({
 					language={language}
 					className="h-[70vh] border rounded-md resize-y min-h-80"
 					onChange={setEditedContent}
+					wordWrap
 				/>
 			) : (
 				<MonacoEditor
@@ -43,6 +44,7 @@ export function ContentEditor({
 					language={language}
 					className="h-[70vh] border rounded-md resize-y min-h-80"
 					onChange={setEditedContent}
+					wordWrap
 				/>
 			)}
 			<div className="space-y-4">

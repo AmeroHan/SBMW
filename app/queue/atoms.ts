@@ -43,7 +43,7 @@ export interface QueueItem {
 	title: string
 }
 
-export const queueAtom = atom<QueueItem[]>([])
+export const queueAtom = atomWithStorage<QueueItem[]>('queue', [])
 export const usingActionAtom = atom<QueueAction | null>(null)
 
 export const actionHistoryAtom = atomWithStorage<QueueAction[]>('historicalActions', [])

@@ -207,7 +207,7 @@ export function DiffEditorCore({
 		<div
 			ref={containerRef}
 			className={cn(
-				'not-prose absolute inset-0 text-sm [&_.monaco-editor]:rounded-md-1 [&_.overflow-guard]:rounded-md-1',
+				'not-prose absolute inset-0 text-sm [&_.monaco-diff-editor]:rounded-md-1 [&_.overflow-guard]:rounded-md-1',
 				className
 			)}
 		/>

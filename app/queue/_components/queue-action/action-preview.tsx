@@ -1,12 +1,13 @@
 import { queueAtom, type QueueAction, type QueueItem, type Replacer, type Searcher } from '../../atoms'
 import { H2 } from '@/app/_components/heading'
 import { ActionPreviewEditor } from './action-preview-editor'
-import { editPage } from '../../actions'
 import { useQuery } from '@tanstack/react-query'
 import { getPageContent } from '@/app/actions'
 import { Spinner } from '@/components/ui/spinner'
 import { useSetAtom } from 'jotai'
 import { toast } from 'sonner'
+import { ExternalTextLink } from '@/components/ui/link'
+import { pageUrl } from '@/lib/utils'
 
 export function ActionPreview({ target, action }: { target: QueueItem; action: QueueAction }) {
 	const setQueue = useSetAtom(queueAtom)
@@ -33,13 +34,17 @@ export function ActionPreview({ target, action }: { target: QueueItem; action: Q
 
 	return (
 		<div className="space-y-2">
-			<H2>预览</H2>
+			<div className="flex items-baseline gap-4">
+				<H2>预览“{target.title}”</H2>
+				<ExternalTextLink className="text-sm" href={pageUrl(target.title)}>
+					查看条目
+				</ExternalTextLink>
+			</div>
 			<ActionPreviewEditor
 				title={target.title}
 				originalContent={originalContent}
 				actionedContent={actionedContent}
 				defaultSummary={action.summary}
-				editPageAction={editPage}
 			/>
 		</div>
 	)

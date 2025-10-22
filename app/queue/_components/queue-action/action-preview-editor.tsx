@@ -9,19 +9,18 @@ import { useState } from 'react'
 import { queueAtom } from '../../atoms'
 import { Caption } from '@/components/ui/caption'
 import { toast } from 'sonner'
+import { editPage } from '@/app/actions'
 
 export function ActionPreviewEditor({
 	title,
 	originalContent,
 	actionedContent,
 	defaultSummary,
-	editPageAction,
 }: {
 	title: string
 	originalContent: string
 	actionedContent: string
 	defaultSummary: string
-	editPageAction: (title: string, content: string, summary: string) => Promise<void>
 }) {
 	const [editedContent, setEditedContent] = useState(actionedContent)
 	const [editedSummary, setEditedSummary] = useState(defaultSummary)
@@ -38,6 +37,7 @@ export function ActionPreviewEditor({
 				language={language}
 				className="h-[70vh] border rounded-md resize-y min-h-80"
 				onChange={setEditedContent}
+				wordWrap
 			/>
 			<Label>
 				<span className="shrink-0">编辑摘要：</span>
@@ -54,7 +54,8 @@ export function ActionPreviewEditor({
 				</Button>
 				<Button
 					onClick={async () => {
-						await editPageAction(title, editedContent, editedSummary)
+						toast.info(`提交中……`)
+						await editPage({ title, content: editedContent, summary: editedSummary })
 						toast.success(`编辑 [[${title}]] 成功`)
 						setQueue((old) => old.slice(1))
 					}}
