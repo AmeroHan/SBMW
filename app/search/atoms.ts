@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { search } from './actions'
+import { search, SearchResult } from './actions'
 
 export const submittedSearchValueAtom = atom('')
-export const searchResultAtom = atom<Awaited<ReturnType<typeof search>> | null>(null)
+export const searchResultAtom = atom<SearchResult | null>(null)

@@ -5,8 +5,10 @@ import { QueueActionHistory } from './_components/queue-action/queue-action-hist
 export default function Page() {
 	return (
 		<div className="space-y-4">
-			<AddQueueAction />
-			<QueueActionHistory />
+			<div className="grid gap-4 lg:grid-cols-2">
+				<QueueActionHistory />
+				<AddQueueAction />
+			</div>
 			<Queue />
 		</div>
 	)

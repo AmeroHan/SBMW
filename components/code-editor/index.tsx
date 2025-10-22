@@ -4,11 +4,26 @@ import dynamic from 'next/dynamic'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 
-import type { CodeEditorProps } from './core'
+import { DiffEditorProps, type EditorProps } from './core'
 
-const CodeEditorCore = dynamic(() => import('./core').then((m) => m.CodeEditorCore), { ssr: false })
+const EditorCore = dynamic(async () => (await import('./core')).EditorCore, { ssr: false })
+const DiffEditorCore = dynamic(async () => (await import('./core')).DiffEditorCore, { ssr: false })
 
-export function MonacoEditor({ className, ...props }: CodeEditorProps) {
+export function MonacoEditor({ className, ...props }: EditorProps) {
+	return (
+		<div
+			className={cn(
+				'relative flex items-center justify-center rounded-md [&>div:not(:empty)~[aria-label=Loading]]:hidden',
+				className
+			)}
+		>
+			<EditorCore {...props} />
+			<Spinner />
+		</div>
+	)
+}
+
+export function MonacoDiffEditor({ className, ...props }: DiffEditorProps) {
 	return (
 		<div
 			className={cn(
@@ -16,7 +31,7 @@ export function MonacoEditor({ className, ...props }: CodeEditorProps) {
 				className
 			)}
 		>
-			<CodeEditorCore {...props} />
+			<DiffEditorCore {...props} />
 			<Spinner />
 		</div>
 	)

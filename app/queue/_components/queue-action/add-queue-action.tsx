@@ -23,6 +23,8 @@ import { MinusIcon, PlusIcon } from 'lucide-react'
 import { NonEmptyTuple } from 'type-fest'
 import { H2 } from '@/app/_components/heading'
 import isDeepEqual from 'react-fast-compare'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 
 const defaultStringSearcher: StringSearcher = { type: 'string', value: '' }
 const defaultRegexpSearcher: RegExpSearcher = { type: 'regexp', pattern: '', flags: 'g' }
@@ -34,9 +36,10 @@ export function AddQueueAction() {
 	const [searcher, setSearcher] = useState<Searcher>(defaultStringSearcher)
 	const [replacer, setReplacer] = useState<Replacer>(defaultStringReplacer)
 	const [summary, setSummary] = useState('')
+	const [skipUnchanged, setSkipUnchanged] = useState(true)
 
 	return (
-		<div className="space-y-2 border bg-muted rounded-md p-4 [text-box-trim:none]">
+		<div className="space-y-2 border bg-muted rounded-md p-4">
 			<H2>添加操作</H2>
 			<SearcherSetter value={searcher} onChange={setSearcher} />
 			<ReplacerSetter value={replacer} onChange={setReplacer} />
@@ -44,16 +47,28 @@ export function AddQueueAction() {
 				<h3 className="font-bold">编辑摘要</h3>
 				<Input className="block" value={summary} onChange={(e) => setSummary(e.target.value)} />
 			</div>
-			<Button
-				onClick={() =>
-					setHistory((history) => {
-						const newAction: SearchReplaceAction = { type: 'search-replace', searcher, replacer, summary }
-						return [newAction, ...history.filter((x) => !isDeepEqual(x, newAction))]
-					})
-				}
-			>
-				确定
-			</Button>
+			<div className="flex gap-4 items-center">
+				<Label>
+					<Checkbox checked={skipUnchanged} onCheckedChange={(checked) => setSkipUnchanged(checked !== false)} />
+					跳过无更改的页面
+				</Label>
+				<Button
+					onClick={() =>
+						setHistory((history) => {
+							const newAction: SearchReplaceAction = {
+								type: 'search-replace',
+								skipUnchanged,
+								searcher,
+								replacer,
+								summary,
+							}
+							return [newAction, ...history.filter((x) => !isDeepEqual(x, newAction))]
+						})
+					}
+				>
+					确定
+				</Button>
+			</div>
 		</div>
 	)
 }

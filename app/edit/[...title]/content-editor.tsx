@@ -1,11 +1,11 @@
 'use client'
-import { MonacoEditor } from '@/components/code-editor'
+import { MonacoDiffEditor, MonacoEditor } from '@/components/code-editor'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useId, useState } from 'react'
-import { editPage } from './actions'
 import { Spinner } from '@/components/ui/spinner'
+import { editPage } from '@/app/actions'
 
 export function ContentEditor({
 	title,
@@ -21,17 +21,30 @@ export function ContentEditor({
 	const [editedContent, setEditedContent] = useState(defaultValue ?? '')
 	const [summary, setSummary] = useState('')
 	const [submitting, setSubmitting] = useState(false)
+	const [showDiff, setShowDiff] = useState(false)
 	const summaryId = useId()
 
 	return (
 		<div className="space-y-4">
-			<MonacoEditor
-				withMinimap
-				defaultValue={defaultValue}
-				language={language}
-				className="h-[70vh] border rounded-md resize-y min-h-80"
-				onChange={setEditedContent}
-			/>
+			{showDiff ? (
+				<MonacoDiffEditor
+					withMinimap
+					hideUnchangedRegions
+					originalContent={defaultValue ?? ''}
+					defaultModifiedContent={editedContent}
+					language={language}
+					className="h-[70vh] border rounded-md resize-y min-h-80"
+					onChange={setEditedContent}
+				/>
+			) : (
+				<MonacoEditor
+					withMinimap
+					defaultValue={defaultValue}
+					language={language}
+					className="h-[70vh] border rounded-md resize-y min-h-80"
+					onChange={setEditedContent}
+				/>
+			)}
 			<div className="space-y-4">
 				<div className="flex">
 					<Label htmlFor={summaryId} className="text-base shrink-0">
@@ -39,16 +52,21 @@ export function ContentEditor({
 					</Label>
 					<Input id={summaryId} type="text" className="grow" onChange={(e) => setSummary(e.target.value)} />
 				</div>
-				<Button
-					onClick={async () => {
-						setSubmitting(true)
-						await editPage({ title, content: editedContent, summary })
-						setSubmitting(false)
-					}}
-				>
-					{submitting && <Spinner />}
-					提交
-				</Button>
+				<div className="flex gap-2">
+					<Button onClick={() => setShowDiff(!showDiff)} variant="outline">
+						{showDiff ? '返回编辑' : '查看差异'}
+					</Button>
+					<Button
+						onClick={async () => {
+							setSubmitting(true)
+							await editPage({ title, content: editedContent, summary })
+							setSubmitting(false)
+						}}
+					>
+						{submitting && <Spinner />}
+						提交
+					</Button>
+				</div>
 			</div>
 		</div>
 	)

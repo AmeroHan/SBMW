@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { NonEmptyTuple } from 'type-fest'
 export interface ActionBase {
 	summary: string
+	skipUnchanged: boolean
 }
 
 export interface SearchReplaceAction extends ActionBase {

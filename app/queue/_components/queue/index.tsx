@@ -1,31 +1,49 @@
 'use client'
 
-import { useAtomValue, useSetAtom } from 'jotai'
-import { queueAtom } from '../../atoms'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { actionHistoryAtom, queueAtom } from '../../atoms'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRef } from 'react'
 import { H2 } from '@/app/_components/heading'
-import { PlusIcon } from 'lucide-react'
+import { PlusIcon, XIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { ActionPreview } from '../queue-action/action-preview'
 
 export function Queue() {
-	const queue = useAtomValue(queueAtom)
+	const [queue, setQueue] = useAtom(queueAtom)
+	const action = useAtomValue(actionHistoryAtom)
 	return (
 		<div className="space-y-2">
 			<H2>队列</H2>
 			<ul className="flex flex-wrap gap-2">
-				{queue.map((page) => {
+				{queue.map((page, i) => {
 					return (
-						<li key={page.title} className="border rounded-sm flex items-center px-4">
-							{page.title}
-						</li>
+						<QueueItem
+							key={page.title}
+							title={page.title}
+							isCurrent={i === 0}
+							onRemoved={() => setQueue(queue.toSpliced(i, 1))}
+						/>
 					)
 				})}
 				<li>
 					<QueueAdder />
 				</li>
 			</ul>
+			{queue.length > 0 && action.length > 0 && <ActionPreview target={queue[0]} action={action[0]} />}
 		</div>
+	)
+}
+
+function QueueItem({ title, isCurrent, onRemoved }: { title: string; isCurrent: boolean; onRemoved: () => void }) {
+	return (
+		<li className={cn('border rounded-sm flex items-center pl-2', isCurrent && 'bg-primary text-primary-foreground')}>
+			{title}
+			<Button size="icon-xs" variant="ghost" onClick={onRemoved}>
+				<XIcon />
+			</Button>
+		</li>
 	)
 }
 
@@ -36,7 +54,10 @@ function QueueAdder() {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault()
-				setQueue((old) => [...old, { title: inputRef.current!.value }])
+				setQueue((old) => {
+					const title = inputRef.current!.value
+					return [...old.filter((x) => x.title !== title), { title }]
+				})
 			}}
 			className="flex gap-2 w-60"
 		>
